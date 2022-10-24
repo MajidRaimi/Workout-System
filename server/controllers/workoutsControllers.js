@@ -1,29 +1,30 @@
 const Workout = require('../models/workoutModel');
 const mongoose = require('mongoose');
 // get all workouts 
-const getWorkouts = async (req , res) => {
-    const workouts = await Workout.find({}).sort({createdAt : -1}) ; 
+const getWorkouts = async (req, res) => {
+    const workouts = await Workout.find({}).sort({ createdAt: -1 });
     res.status(200).json(workouts);
 }
 
 
+
 // get a single workout
-const getWorkout = async (req , res) => {
-    const {id} = req.params ; 
+const getWorkout = async (req, res) => {
+    const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({msg : 'not valid id'})
+        return res.status(404).json({ msg: 'not valid id' })
     }
 
     try {
-        const workout = await Workout.findById(id) ; 
-        
+        const workout = await Workout.findById(id);
+
         if (!workout) {
-            return res.status(404).json({msg : 'Could find any workout with this id'})
+            return res.status(404).json({ msg: 'Could find any workout with this id' })
         }
         res.status(200).json(workout);
-    } catch (err){
-        res.status(404).json({msg : 'Could find any workout with this id'})
+    } catch (err) {
+        res.status(404).json({ msg: 'Could find any workout with this id' })
     }
 
 }
@@ -46,19 +47,19 @@ const createWorkout = async (req, res) => {
 // delete a workout
 
 const deleteWorkout = async (req, res) => {
-    const {id} = req.params ; 
+    const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({msg : 'not valid id'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ msg: 'not valid id' })
     }
 
-    const workout = await Workout.findOneAndDelete({_id : id}) ; 
+    const workout = await Workout.findOneAndDelete({ _id: id });
 
     if (!workout) {
-        return res.status(404).json({msg : 'Could find any workout with this id'})
+        return res.status(404).json({ msg: 'Could find any workout with this id' })
     }
 
-    res.status(200).send(workout) ; 
+    res.status(200).send(workout);
 
 }
 
@@ -66,33 +67,32 @@ const deleteWorkout = async (req, res) => {
 // update a workout
 
 const updateWorkout = async (req, res) => {
-    const { id } = req.params ; 
+    const { id } = req.params;
 
-    
 
-    if (!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({msg : 'not valid id'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ msg: 'not valid id' })
     }
 
 
     const workout = await Workout.findOneAndUpdate(
-    {
-        _id : id 
-    } , 
-    {
-        ...req.body
-    }
-    ) ;  
+        {
+            _id: id
+        },
+        {
+            ...req.body
+        }
+    );
 
     if (!workout) {
-        return res.status(404).json({msg : 'Could find any workout with this id'})
+        return res.status(404).json({ msg: 'Could find any workout with this id' })
     }
 
-    res.status(200).json(workout) ;
+    res.status(200).json(workout);
 
 }
 
 
 module.exports = {
-    createWorkout , getWorkouts , getWorkout , deleteWorkout , updateWorkout
+    createWorkout, getWorkouts, getWorkout, deleteWorkout, updateWorkout
 }

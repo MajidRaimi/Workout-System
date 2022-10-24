@@ -1,11 +1,17 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
 
-import WorkoutDetails from '../components/WorkoutDetails' ; 
+import WorkoutDetails from '../components/WorkoutDetails';
+import WorkoutForm from '../components/WorkoutForm';
+import { useWorkoutsContext } from '../hooks/useWorkoutsContext';
+
+
 
 const Home = () => {
 
-    const [workouts, setWorkouts] = useState(null);
+    const {
+        workouts, dispatch
+    } = useWorkoutsContext();
+
 
     useEffect(() => {
 
@@ -14,25 +20,28 @@ const Home = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setWorkouts(data);
-                console.log(data)
+                dispatch({ type: 'SET_WORKOUTS', payload: data });
             }
         }
         getWorkouts();
-    }, [])
+    }, [dispatch])
 
 
     return (
-        <div className="home">
-            <div className="workouts">
-                {
-                    workouts && workouts.map(workout => (
-                        <WorkoutDetails key={workout._id} workout={workout} />
+        <div className="">
+            <div className="home">
+                <div className="workouts">
+                    {
+                        workouts && workouts.map(workout => (
+                            <WorkoutDetails key={workout._id} workout={workout} />
                         )
-                    )
-                }
+                        )
+                    }
+                </div>
+                <WorkoutForm />
             </div>
-            
+            <video autoPlay loop muted src="https://prakhar826.github.io/anime-video/VID_20220916_090448_554.mp4" alt="" />
+
         </div>
     );
 }

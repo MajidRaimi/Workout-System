@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import WorkoutDetails from '../components/WorkoutDetails';
 import WorkoutForm from '../components/WorkoutForm';
 import { useWorkoutsContext } from '../hooks/useWorkoutsContext';
-
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const Home = () => {
@@ -11,20 +11,27 @@ const Home = () => {
     const {
         workouts, dispatch
     } = useWorkoutsContext();
-
+    const { user } = useAuthContext();
 
     useEffect(() => {
 
         const getWorkouts = async () => {
-            const response = await fetch('api/workouts/');
+            const response = await fetch('api/workouts/', {
+                headers : {
+                    'Authorization' : `Bearer ${user.token}`  
+                }
+            });
             const data = await response.json();
 
             if (response.ok) {
                 dispatch({ type: 'SET_WORKOUTS', payload: data });
             }
         }
-        getWorkouts();
-    }, [dispatch])
+
+        if (user) {
+            getWorkouts();
+        }
+    }, [dispatch , user])
 
 
     return (
@@ -40,7 +47,6 @@ const Home = () => {
                 </div>
                 <WorkoutForm />
             </div>
-            <video autoPlay loop muted src="https://prakhar826.github.io/anime-video/VID_20220916_090448_554.mp4" alt="" />
 
         </div>
     );

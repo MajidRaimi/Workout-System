@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useWorkoutsContext } from '../hooks/useWorkoutsContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const WorkoutForm = () => {
+
+    const { user } = useAuthContext();
 
     const {
         dispatch
@@ -15,6 +18,11 @@ const WorkoutForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if(!user){
+            setError('user not authorized') ; 
+            return ; 
+        }
+
         const workout = {
             title, load, reps
         }
@@ -25,7 +33,8 @@ const WorkoutForm = () => {
                 method: 'POST',
                 body: JSON.stringify(workout),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Barer ${user.token}`
                 }
             }
         )
@@ -39,7 +48,7 @@ const WorkoutForm = () => {
 
             dispatch(
                 {
-                    type : 'CREATE_WORKOUT', payload : json
+                    type: 'CREATE_WORKOUT', payload: json
                 }
             )
 
